@@ -19,7 +19,7 @@ export const myAxios = axios.create({
 
 // export const SetAuthToken = () => {
 //   const token = JSON.parse(localStorage.getItem("data"));
-//   console.log(token);
+//   // console.log(token);
 //   if (token) {
 //     myAxios.defaults.headers.common[
 //       "Authorization"
@@ -28,3 +28,14 @@ export const myAxios = axios.create({
 //     delete myAxios.defaults.headers.common["Authorization"];
 //   }
 // };
+
+export const SetAuthToken = () => {
+  const token = JSON.parse(localStorage.getItem("data"));
+  if (token) {
+    myAxios.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${token.access_token}`;
+  } else {
+    delete myAxios.defaults.headers.common["Authorization"];
+  }
+};

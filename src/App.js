@@ -1,4 +1,5 @@
 import React from "react";
+import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import About from "./Component/Pages/About/About";
 import Contact from "./Component/Pages/Contact/Contact";
@@ -8,6 +9,9 @@ import Services from "./Component/Pages/Services/Services";
 import SignUP from "./Component/Pages/SignUp/SignUp";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import PrivateRoutes from "./PrivateRoutes";
+import UserDashboard from "./Component/User-route/UserDashboard";
+import UserProfileinfo from "./Component/User-route/UserProfileinfo";
 const App = () => {
   return (
     <>
@@ -24,6 +28,10 @@ const App = () => {
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUP />} />
+          <Route path="/user" element={<PrivateRoutes />}>
+            <Route path="dashboard" element={<UserDashboard />} />
+            <Route path="profile-info" element={<UserProfileinfo />} />
+          </Route>
         </Routes>
       </Router>
       ,

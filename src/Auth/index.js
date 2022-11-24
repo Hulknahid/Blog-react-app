@@ -1,8 +1,8 @@
-// import { SetAuthToken } from "../Services/helper";
+import { SetAuthToken } from "../Services/helper";
 // //isLogged in
 // export const isLogged = () => {
 //   const data = localStorage.getItem("data");
-//   console.log(data);
+//   // console.log(data);
 //   if (data == null) {
 //     return false;
 //   } else {
@@ -30,3 +30,33 @@
 //     return undefined;
 //   }
 // };
+
+// doLogin and store token
+export const doLogin = (data, next) => {
+  localStorage.setItem("data", JSON.stringify(data));
+  next();
+  SetAuthToken();
+};
+//doLogout and storage clear
+export const doLogout = (next) => {
+  localStorage.removeItem("data");
+  next();
+};
+//isLoggedin check user login
+export const isLogged = () => {
+  const data = localStorage.getItem("data");
+  if (data !== null) {
+    SetAuthToken();
+    return data;
+  } else {
+    return false;
+  }
+};
+// get current user details
+export const getCurrentUserDetails = () => {
+  if (isLogged) {
+    return JSON.parse(localStorage.getItem("data"))?.user;
+  } else {
+    return undefined;
+  }
+};

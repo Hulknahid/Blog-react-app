@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link as ReactLink } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link as ReactLink, useNavigate } from "react-router-dom";
 import {
   Collapse,
   Navbar,
@@ -10,12 +10,30 @@ import {
   NavLink,
   NavbarText,
 } from "reactstrap";
+import { doLogout, getCurrentUserDetails, isLogged } from "../../../Auth";
 const CustomNavbar = (args) => {
+  const navigator = useNavigate();
+  //toggle and function
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
+  //login logic implement
+  const [login, setLogin] = useState(false);
+  const [user, setUser] = useState(undefined);
+  useEffect(() => {
+    setLogin(isLogged());
+    setUser(getCurrentUserDetails());
+  }, [login]);
+  // console.log(login);
+  // console.log(user);
+  const userLogout = () => {
+    doLogout(() => {
+      setLogin(false);
+      navigator("/");
+    });
+  };
   return (
     <div>
-      <Navbar {...args} className="navbar-expand-lg navbar-dark bg-dark">
+      <Navbar {...args} className="navbar-expand-lg navbar-dark bg-dark px-5">
         <NavbarBrand tag={ReactLink} to="/">
           Blog-App
         </NavbarBrand>
@@ -43,17 +61,38 @@ const CustomNavbar = (args) => {
               </NavLink>
             </NavItem>
           </Nav>
-          <Nav navbar>
-            <NavItem>
-              <NavLink tag={ReactLink} to="/login">
-                Login
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink tag={ReactLink} to="/signup">
-                Sign Up
-              </NavLink>
-            </NavItem>
+          <Nav navbar style={{ cursor: "pointer" }}>
+            {login && (
+              <>
+                <NavItem>
+                  <NavLink tag={ReactLink} to={"/user/profile-info"}>
+                    Profile-info
+                  </NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink tag={ReactLink} to="/user/dashboard">
+                    {user.email}
+                  </NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink onClick={userLogout}>Logout</NavLink>
+                </NavItem>
+              </>
+            )}
+            {!login && (
+              <>
+                <NavItem>
+                  <NavLink tag={ReactLink} to="/login">
+                    Login
+                  </NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink tag={ReactLink} to="/signup">
+                    Sign Up
+                  </NavLink>
+                </NavItem>
+              </>
+            )}
           </Nav>
         </Collapse>
       </Navbar>

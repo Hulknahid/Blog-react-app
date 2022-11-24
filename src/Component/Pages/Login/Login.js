@@ -14,9 +14,12 @@ import {
   Input,
   Button,
 } from "reactstrap";
-import { onLogin, userLogin } from "../../../Services/user-services";
-// import { onLogin } from "../../../Services/user-services";
+import { doLogin } from "../../../Auth";
+import { useNavigate } from "react-router-dom";
+import { userLogin } from "../../../Services/user-services";
 const Login = () => {
+  //page redirection
+  const navigator = useNavigate();
   //data store
   const [data, setData] = useState({
     username: "",
@@ -39,6 +42,10 @@ const Login = () => {
     userLogin(data)
       .then((response) => {
         console.log(response);
+        doLogin(response, () => {
+          console.log("Storage successfully");
+          navigator("/user/dashboard");
+        });
         toast.success("User Login successfully!!");
       })
       .catch((error) => {
